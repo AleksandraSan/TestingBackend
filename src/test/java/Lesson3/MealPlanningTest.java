@@ -1,10 +1,13 @@
+package Lesson3;
+
+import Lesson3.AbstractTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.lessThan;
 
-public class MealPlanningTest extends AbstractTest{
+public class MealPlanningTest extends AbstractTest {
 
     @Test
     public void connectUser(){

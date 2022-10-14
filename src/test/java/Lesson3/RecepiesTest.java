@@ -1,3 +1,6 @@
+package Lesson3;
+
+import Lesson3.AbstractTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
