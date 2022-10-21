@@ -1,7 +1,15 @@
+package Lesson4;
+
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -22,13 +30,16 @@ public class AbstractTest {
     private static String firstname;
     private static String email;
     private static String lastname;
+    protected static ResponseSpecification responseSpecification;
+    protected static RequestSpecification requestSpecification;
 
 
     @BeforeAll
     static void initTest () throws IOException {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
         configFile = new FileInputStream("src/main/resources/my.properties");
         property.load(configFile);
-
         apiKey = property.getProperty("apiKey");
         baseUrl = property.getProperty("base_url");
         query = property.getProperty("query");
@@ -42,6 +53,21 @@ public class AbstractTest {
         firstname = property.getProperty("firstname");
         lastname = property.getProperty("lastname");
         email = property.getProperty("email");
+
+        responseSpecification = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .expectStatusLine("HTTP/1.1 200 OK")
+                .expectResponseTime(Matchers.lessThan(5000L))
+                .expectContentType(ContentType.JSON)
+                .build();
+
+        requestSpecification = new RequestSpecBuilder()
+                .addQueryParam("apiKey", getApiKey())
+                .setContentType(ContentType.JSON)
+                .build();
+
+        RestAssured.responseSpecification = responseSpecification;
+        RestAssured.requestSpecification = requestSpecification;
     }
 
     public static String getFirstname() {
